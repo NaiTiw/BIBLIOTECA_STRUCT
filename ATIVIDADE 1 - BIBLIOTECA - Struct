@@ -1,0 +1,94 @@
+#include <stdio.h>
+
+struct Livro {
+    char titulo[100];
+    char autor[100];
+    int numPaginas;
+};
+
+struct Biblioteca {
+    Livro livros[10];
+    int quantidadeLivros;
+};
+
+void lerLivro(Livro& livro) {
+    printf("Digite o titulo do livro");
+    scanf("%[^\n]s%*c", livro.titulo);
+
+    printf("Digite o autor do livro: ");
+    scanf("%[^\n]s%*c", livro.autor);
+
+    printf("Digite o numero de paginas do livro:");
+    scanf("%[^\n]s%*c", livro.numPaginas);
+}
+
+void imprimirLivro(const Livro& livro) {
+    printf("Titulo: ", livro.titulo);
+    printf("Autor: ", livro.autor);
+    printf("Numero de paginas: ", livro.numPaginas);
+}
+
+void imprimirBiblioteca(const Biblioteca& biblioteca) {
+    printf("----- Livros na Biblioteca -----");
+    for (int i = 0; i < biblioteca.quantidadeLivros; i++) {
+        printf("Livro ", i + 1, ":");
+        imprimirLivro(biblioteca.livros[i]);
+    }
+}
+
+void imprimirMaiorLivro(const Biblioteca& biblioteca) {
+    int indexMaiorLivro = 0;
+    for (int i = 1; i < biblioteca.quantidadeLivros; i++) {
+        if (biblioteca.livros[i].numPaginas > biblioteca.livros[indexMaiorLivro].numPaginas) {
+            indexMaiorLivro = i;
+        }
+    }
+
+    printf("----- Livro com mais paginas -----");
+    imprimirLivro(biblioteca.livros[indexMaiorLivro]);
+}
+
+int main() {
+    Biblioteca minhaBiblioteca;
+    minhaBiblioteca.quantidadeLivros = 0;
+
+    char opcao;
+    do {
+        printf("Escolha uma opcao:\n");
+        printf("1 - Adicionar livro\n");
+        printf("2 - Imprimir livros da biblioteca\n");
+        printf("3 - Imprimir livro com mais paginas\n");
+        printf("0 - Sair\n");
+        printf("Opcao: \n");
+        scanf("%[^\n]s%*c", opcao);
+
+        switch (opcao) {
+        case '1':
+            if (minhaBiblioteca.quantidadeLivros < 10) {
+                lerLivro(minhaBiblioteca.livros[minhaBiblioteca.quantidadeLivros]);
+                minhaBiblioteca.quantidadeLivros++;
+            } else {
+                printf("A biblioteca esta cheia. Nao eh possivel adicionar mais livros.");
+            }
+            break;
+        case '2':
+            imprimirBiblioteca(minhaBiblioteca);
+            break;
+        case '3':
+            if (minhaBiblioteca.quantidadeLivros > 0) {
+                imprimirMaiorLivro(minhaBiblioteca);
+            } else {
+                printf("A biblioteca esta vazia. Adicione livros para poder encontrar o livro com mais paginas.");
+            }
+            break;
+        case '0':
+            printf("Encerrando o programa.");
+            break;
+        default:
+            printf("Opcao invalida. Tente novamente.");
+        }
+
+    } while (opcao != '0');
+
+    return 0;
+}
